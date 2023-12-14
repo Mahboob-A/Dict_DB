@@ -72,8 +72,9 @@ For command documentation, see above welcome message.
                         ''')
                 
                 elif not is_parsed: 
+                        response = (False, 'ERROR: The COMMAND [{}] is INVALID or the VALUE FORMAT [{}] for the DATA TYPE [{}] is INVALID. If you are sure data type/command is correct, then please check if correct value is passed for correct data type, and proper value format is maintained. For example - non coma seperated value for INT/STR datatype. Non-integer value for INT etc. Also check if correct command is used for certain operations.)'.format(command, value, data_type))
                         print()
-                        print('RESPONSE: ', '(False,', 'ERROR: The COMMAND [{}] is INVALID or the VALUE FORMAT [{}] for the DATA TYPE [{}] is INVALID. If you are sure data type/command is correct, then please check if correct value is passed for correct data type, and proper value format is maintained. For example - non coma seperated value for INT/STR datatype. Non-integer value for INT etc. Also check if correct command is used for certain operations.)'.format(command, value, data_type))
+                        print('RESPONSE: ', response)
                         print()
                 
                 
