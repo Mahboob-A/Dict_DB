@@ -51,12 +51,12 @@ class CommandCenter():
                 if key not in DATA: 
                         return (False, 'ERROR: Key [{}] not found. Please provide correct key.'.format(key))
                 else: 
-                        return (True, {'data' : DATA[key]})
+                        return (True, {'data' : DATA[key], 'data_type' : type(DATA[key])})
                 
          
         def handle_insert(self, key, value, insert_list_command=False): 
                 ''' 
-                Description: Handler method to create a non-list type data
+                Description: Handler method to create a record in database
                 Return: Tuple - True with success message.  False if key already present with error message. 
                 '''
                 
@@ -81,7 +81,7 @@ class CommandCenter():
         
         def handle_update(self, key, update_value, update_list_command=False): 
                 '''
-                Description: Handler method to update an existing non-list key with current value 
+                Description: Handler method to update an existing key in database with current value 
                 Return: Tuple - True with success message. False with error message. 
                 '''
                 
@@ -96,12 +96,12 @@ class CommandCenter():
                 if update_list_command: 
                         ''' if the saved value is not list, then prompt to give UPDATE command to update non-list value '''
                         if not isinstance(saved_value, list): 
-                                return (False, 'ERROR: Key [{}] contains non-list items [{}]. Did you fortget to run (UPDATE;key;value;int/str) to update int/str key).'.format(key, saved_value))
+                                return (False, 'ERROR: Key [{}] contains non-list item [{}] of which data type is [{}]. The value provided [{}] is of [{}] data type. Did you fortget to run (UPDATE;key;value;int/str) to update int/str key).'.format(key, saved_value, type(saved_value), update_value, type(update_value)))
                 
                 
                 # if update_list_command if False, it means UPDATE command is run. 
                 if not update_list_command: 
-                        ''' UPDATE command is run to update a list, Enforce to use UPDATELIST command to update list. '''
+                        ''' if UPDATE command is run to update a list, Enforce to use UPDATELIST command to update list. '''
                         if isinstance(saved_value, list): 
                                 return (False, 'ERROR: Key [{}] contains list item [{}] but UPDATE command is run. Did you fortget to run  (UPDATELIST;key;value;list) to update list key.'.format(key, saved_value))
                 
@@ -109,15 +109,15 @@ class CommandCenter():
                 # check if saved value matches with provided value type 
                 if isinstance(saved_value, int): 
                         if not isinstance(update_value, int): 
-                                return (False, 'ERROR: Updating value for Key [{}] contains non-integer [{}]. Did you forget to run (UPDATE;key;value;int) to update int key'.format(key, update_value))
+                                return (False, 'ERROR: Provided value [{}] to update for Key [key={}, which holds [{}] type value] contains non-integer value of which data type is [{}]. Did you forget to run (UPDATE;key;value;int) to update int key'.format(update_value, key, type(saved_value), type(update_value)))
                 
                 elif isinstance(saved_value, str): 
                         if not isinstance(update_value, str):
-                                return (False, 'ERROR: Updating value for Key [{}] contains non-str value [{}]. Did you forget to run (UPDATE;key;value;str) to update str key'.format(key, update_value))
+                                return (False, 'ERROR: Provided value [{}] to update for Key [key={}, which holds [{}] type value] contains non-str value of which data type is [{}]. Did you forget to run (UPDATE;key;value;str) to update str key'.format(update_value, key, type(saved_value), type(update_value)))
                 
                 elif isinstance(saved_value, list): 
                         if not isinstance(update_value, list): 
-                                return (False, 'ERROR: Updating value for Key [{}] contains non-list item [{}]. Did you forget to run (UPDATELIST;key;value;list) to update list key'.format(key, update_value))
+                                return (False, 'ERROR: Provided value [{}] to update for Key [key={}, which holds [{}] type value] contains non-list item of which data type is [{}]. Did you forget to run (UPDATELIST;key;value;list) to update list key'.format(update_value, key, type(saved_value), type(update_value)))
                 
                 
                 # update the value 
@@ -139,10 +139,10 @@ class CommandCenter():
                         return return_value
                 
                 elif not isinstance(increment_value, int): 
-                        return (False, 'ERROR: Incrementing value for Key [{}] is non-integer [{}]'.format(key, increment_value))
+                        return (False, 'ERROR: Provided value to increment for Key [{}] is non-integer [{}] and it"s  data type is [{}]. INT value can not be incremented with provided Non-INT value'.format(key, increment_value, type(increment_value)))
                 
                 elif not isinstance(value['data'], int): 
-                        return (False, 'ERROR: Key [{}] contains non-integer value [{}]. The value might be string'.format(key, value['data']))
+                        return (False, 'ERROR: Key [{}] contains non-integer value [{}] and it"s data type is [{}]. Non-INT key can not be incremented'.format(key, value['data'], type(DATA['data'])))
                 
                 else: 
                         if increment_value: 
@@ -169,10 +169,10 @@ class CommandCenter():
                         return return_value
                 
                 elif not isinstance(decrement_value, int): 
-                        return (False, 'ERROR: Decrementing value for Key [{}] is non-integer [{}]'.format(key, decrement_value))
+                        return (False, 'ERROR: Provided value to decrement for Key [{}] is non-integer [{}] and it"s  data type is [{}]. INT value can not be decremented with provided Non-INT value'.format(key, decrement_value, type(decrement_value)))
                 
                 elif not isinstance(value['data'], int): 
-                        return (False, 'ERROR: Key [{}] contains non-integer value [{}]. The value might be string'.format(key, value['data']))
+                        return (False, 'ERROR: Key [{}] contains non-integer value [{}] and it"s data type is [{}]. Non-INT value can not be deremented'.format(key, value['data'], type(DATA['data'])))
                 
                 else: 
                         if decrement_value: 
@@ -312,7 +312,7 @@ def command_parser(data):
         try: 
                 
                 is_parsed = False 
-                command = key = value = data_type = ''
+                command = key = value = data_type = message = ''
                 
                 # getting the list of the command without the semicolon
                 command_parts = data.split(';')
@@ -328,9 +328,9 @@ def command_parser(data):
                 # Enforcing exact three semicolon for appropriate command. No semicolon at the end of the command. 
                 if semi_colon_count < 3 or semi_colon_count > 3:  
                         is_parsed = 'improper_semicolon'
-                        return command, key, is_parsed, value, is_parsed  
+                        message = (False, 'ERROR: You must provide three semicolon in the commnd - " ; " ')
+                        return command, key, is_parsed, value, is_parsed, message
                         
-                
                 # only command and key is needed. 
                 if command in key_only_commands: 
                         command, key = command_parts[:2] 
@@ -339,6 +339,8 @@ def command_parser(data):
                 elif command in key_value_commands: 
                         command, key, value, data_type = command_parts[:4]
                         
+                        # make command and data type ot upper case. 
+                        command = command.upper() 
                         data_type = data_type.upper()
                         
                         if data_type == 'LIST': 
@@ -348,35 +350,52 @@ def command_parser(data):
                         elif data_type == 'INT': 
                                 ok = True 
                                 
-                                # Enforce only digits are provided. 
-                                if not value.isdigit(): 
-                                        ok = False 
-                                        is_parsed = False 
+                                # if value is not passed, for INCREMENT or DECREMENT command, then provide default value 1. 
+                                if command == 'INCREMENT' or command ==  'DECREMENT': 
+                                        if value == '': 
+                                                value = '1'
                                 
                                 # Enforce no coma separated value is provided. 
                                 for char in value: 
                                         if char == ',': 
                                                 ok = False
-                                                is_parsed = False
+                                                is_parsed = 'int_has_coma_separated_value'
+                                                message = message = (False, 'ERROR: INT has coma separated value. The data type is [{}] but the value provided is [{}] which is of type [{}] and has coma separated values. Please provide integer value for INT datatype.'.format(data_type, value, type(value))) 
+                                
                                 if ok: 
+                                        # Enforce only digits are provided. 
+                                        if not value.isdigit():  
+                                                ok = False 
+                                                is_parsed = 'int_has_string_value'
+                                                message = (False, 'ERROR: The data type is [{}] but the value provided is [{}] which is of type [{}]. Please provide integer value for INT datatype.'.format(data_type, value, type(value))) 
+                                
+                                if ok: 
+                                        # if no value is passed in INCREAMENT or DECREEMNT command, set the value to 1. 
                                         value = int(value)
                                         is_parsed = True 
                                         
                         elif data_type == 'STR': 
                                 ok = True 
                                 
-                                # Enforce no coma separatd value is provided. In STR data type, digits are also accepted as String value. 
-                                for char in value: 
-                                        if char == ',': 
-                                                ok = False
-                                                is_parsed = False
+                                if command == 'INCREMENT' or command == 'DECREMENT': 
+                                        ok = False 
+                                        is_parsed = 'str_increment_decrement'
+                                        message = (False, 'ERROR: The command is [{}] but the data type is [{}]. [{}] command can not be used with [{}] data type'.format(command, data_type, command, data_type))
+                                
+                                if ok: 
+                                        # Enforce no coma separatd value is provided. In STR data type, digits are also accepted as String value. 
+                                        for char in value: 
+                                                if char == ',': 
+                                                        ok = False
+                                                        is_parsed = False
                                 if ok: 
                                         value = str(value)
                                         is_parsed = True 
                                         
                         # Invalid Data Type is provided. 
                         else: 
-                                is_parsed = False 
+                                is_parsed = 'invalid_data_type'
+                                message = (False, 'ERROR: The COMMAND [{}] is INVALID or the VALUE FORMAT [{}] for the DATA TYPE [{}] is INVALID. If you see empty [] list, it means you have not provided value for that portion. If you are sure data type/command is correct, then please check if correct value is passed for correct data type, and proper value format is maintained. For example - non coma seperated value for INT/STR datatype. Non-integer value for INT etc. Also check if correct command is used for certain operations.'.format(command, value, data_type))
                 
                 # STATS command. 
                 elif command in general_commands: 
@@ -385,10 +404,11 @@ def command_parser(data):
                 # Invalid command, Invalid Command Structure, Everything Other Errors. 
                 else: 
                         is_parsed = 'improper_command' 
-                        return command, key, value, data_type, is_parsed
+                        message = (False, 'ERROR: Your command could not be parsed. Please provide correct command.')
+                        return command, key, value, data_type, is_parsed, message
                 
                 # Command parsing is successful. Return the parsed values. 
-                return command, key, value, data_type, is_parsed
+                return command, key, value, data_type, is_parsed, message
                 
         except Exception as e: 
                 return (False, 'ERROR: Exception occurred while parsing the command - [{}]'.format(str(e)))
