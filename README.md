@@ -32,5 +32,5 @@ Please clone the repository, and and run `python dict_db.py`.
 
 ### Image 
 
-![Screenshot from 2024-08-28 09-17-24](https://github.com/user-attachments/assets/3607e498-e66f-4d8d-9506-6163a81ade2a)
+![Screenshot from 2024-08-28 09-18-57](https://github.com/user-attachments/assets/f732bbf3-8352-4cd5-9c54-d956fa89140a)
 
