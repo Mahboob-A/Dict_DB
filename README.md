@@ -1,13 +1,11 @@
 
-
 ## DictDB - A CLI Database 
 
 A Python CLI project. 
 
 It used Pyton Dictionary to mimic MySQL like Database. 
 
-<br><br>
-
+<br>
 ### Features 
 
 It can handle the below SQL-like operations: 
@@ -23,25 +21,21 @@ It can handle the below SQL-like operations:
 - UPDATELIST - Update List 
 - STATUS     - All Command Status 
 
-
-<br><br>
-
+<br>
 ### Learnings 
 Implemented the knowledge of SQL/MySQL to develope a CLI project to mimic the MySQL internals. It was super benefitial for to in my initial days 
 of learning SQL. As I had to learn a lot of MySQL internals to build the project, I also gained super handson knowledge and data manipulation on Python.  
 
-<br><br>
-
+<br>
 ### How To Run 
 
 Please clone the repository, and and run `python dict_db.py`. 
 
-<br><br>
-
+<br>
 ### Commands 
 
 * Dict_DB needs three `semicolon` in the command.
-<br><br>
+<br>
 
       Command Lists.  Commands are case-insensitive. 
 
@@ -59,8 +53,8 @@ Please clone the repository, and and run `python dict_db.py`.
 
       Incorrect Command: insert;  name;  My nam is Mahboob Alam;  str | Notice the space after semicolon. Bad Command. 
       
-        
-<br><br>
+ 
+<br>
 
 - SELECT:      `select;key;;`
   
@@ -82,10 +76,10 @@ Please clone the repository, and and run `python dict_db.py`.
    
 - STATUS:       `status;;;`
 
-<br><br>
+<br>
 
 ### Image 
-<br><br>
+<br>
 
 ![Screenshot from 2024-08-28 09-18-57](https://github.com/user-attachments/assets/f732bbf3-8352-4cd5-9c54-d956fa89140a)
 
