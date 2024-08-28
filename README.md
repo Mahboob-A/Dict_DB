@@ -3,7 +3,7 @@
 
 A Python CLI project. 
 
-It used Pyton Dictionary to mimic MySQL like Database. 
+DictDB uses Pyton Dictionary to mimic MySQL like Database. 
 
 
 
